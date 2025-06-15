@@ -25,6 +25,11 @@ def get_db():
     finally:
         db.close()
 
+@app.on_event("startup")
+async def startup_event():
+    print("App has started on Render!")
+
+
 @app.get("/ping")
 def ping():
     return {"message": "Server is running"}
