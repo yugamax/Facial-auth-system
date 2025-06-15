@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, JSON, DateTime
 from sqlalchemy.sql import func
-from .database import Base
+from db_init import Base
 
 class FaceEncoding(Base):
     __tablename__ = "face_encodings"
