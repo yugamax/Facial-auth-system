@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Form, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from db_init import SessionLocal, engine
 from db_handling import FaceEncoding, Base
@@ -11,7 +12,15 @@ from sklearn.metrics.pairwise import cosine_similarity
 from functools import lru_cache
 
 Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @lru_cache(maxsize=1)
 def get_face_app():
