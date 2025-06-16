@@ -22,15 +22,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-face_app = None
-
-@app.on_event("startup")
-async def load_model_once():
-    global face_app
-    print("Loading buffalo_s face model...")
-    face_app = FaceAnalysis(name='buffalo_s')
-    face_app.prepare(ctx_id=-1)
-    print("Face model loaded")
+@lru_cache(maxsize=1)
+def get_face_app():
+    app = FaceAnalysis(name='buffalo_s')
+    app.prepare(ctx_id=-1)
+    return app
 
 def read_image_from_upload(file: UploadFile):
     image_bytes = file.file.read()
@@ -39,6 +35,7 @@ def read_image_from_upload(file: UploadFile):
 
 def get_face_embedding(file: UploadFile):
     img = read_image_from_upload(file)
+    face_app = get_face_app()
     faces = face_app.get(img)
     if not faces:
         raise ValueError("No face found in the image")
