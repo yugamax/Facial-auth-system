@@ -1,8 +1,10 @@
 fastapi
 uvicorn
-face_recognition
-python-multipart
-numpy
 sqlalchemy
 psycopg2-binary
-python-dotenv
+numpy
+opencv-python-headless
+scikit-learn
+insightface
+python-multipart
+onnxruntime
