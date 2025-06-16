@@ -8,12 +8,16 @@ import os
 import cv2
 from insightface.app import FaceAnalysis
 from sklearn.metrics.pairwise import cosine_similarity
+from functools import lru_cache
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-face_app = FaceAnalysis()
-face_app.prepare(ctx_id=-1)
+@lru_cache(maxsize=1)
+def get_face_app():
+    app = FaceAnalysis(name='antelopev2', providers=['CPUExecutionProvider'])
+    app.prepare(ctx_id=-1)
+    return app
 
 def read_image_from_upload(file: UploadFile):
     image_bytes = file.file.read()
@@ -22,6 +26,7 @@ def read_image_from_upload(file: UploadFile):
 
 def get_face_embedding(file: UploadFile):
     img = read_image_from_upload(file)
+    face_app = get_face_app()
     faces = face_app.get(img)
     if not faces:
         raise ValueError("No face found in the image")
