@@ -8,3 +8,4 @@ scikit-learn
 insightface
 python-multipart
 onnxruntime
+dotenv
