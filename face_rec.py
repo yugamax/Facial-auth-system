@@ -24,7 +24,7 @@ app.add_middleware(
 
 @lru_cache(maxsize=1)
 def get_face_app():
-    app = FaceAnalysis(name='antelopev2', providers=['CPUExecutionProvider'])
+    app = FaceAnalysis(name='buffalo_s')
     app.prepare(ctx_id=-1)
     return app
 
