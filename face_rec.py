@@ -6,7 +6,8 @@ from db_handling import FaceEncoding, Base
 import numpy as np
 import uvicorn
 import os
-import cv2
+from PIL import Image
+from io import BytesIO
 from insightface.app import FaceAnalysis
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -26,8 +27,8 @@ app.prepare(ctx_id=-1)
 
 def read_image_from_upload(file: UploadFile):
     image_bytes = file.file.read()
-    np_array = np.frombuffer(image_bytes, np.uint8)
-    return cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+    image = Image.open(BytesIO(image_bytes)).convert("RGB")  # Ensure 3-channel RGB
+    return np.array(image)
 
 def get_face_embedding(file: UploadFile):
     img = read_image_from_upload(file)

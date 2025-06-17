@@ -3,7 +3,7 @@ uvicorn
 sqlalchemy
 psycopg2-binary
 numpy
-opencv-python-headless
+pillow
 scikit-learn
 insightface
 python-multipart
