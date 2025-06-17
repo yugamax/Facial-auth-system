@@ -27,7 +27,7 @@ app.prepare(ctx_id=-1)
 
 def read_image_from_upload(file: UploadFile):
     image_bytes = file.file.read()
-    image = Image.open(BytesIO(image_bytes)).convert("RGB")  # Ensure 3-channel RGB
+    image = Image.open(BytesIO(image_bytes)).convert("RGB")
     return np.array(image)
 
 def get_face_embedding(file: UploadFile):
