@@ -10,6 +10,7 @@ from PIL import Image
 from io import BytesIO
 from insightface.app import FaceAnalysis
 from sklearn.metrics.pairwise import cosine_similarity
+from functools import lru_cache
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,8 +23,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app = FaceAnalysis(name='buffalo_s')
-app.prepare(ctx_id=-1)
+@lru_cache(maxsize=1)
+def load_face_model():
+    model = FaceAnalysis(name='buffalo_s')
+    model.prepare(ctx_id=-1)
+    return model
 
 def read_image_from_upload(file: UploadFile):
     image_bytes = file.file.read()
@@ -32,7 +36,7 @@ def read_image_from_upload(file: UploadFile):
 
 def get_face_embedding(file: UploadFile):
     img = read_image_from_upload(file)
-    face_app = app
+    face_app = load_face_model()
     faces = face_app.get(img)
     if not faces:
         raise ValueError("No face found in the image")
